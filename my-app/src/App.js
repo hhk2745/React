@@ -5,8 +5,9 @@ import TestModule3 from './TestModule3';
 import Counter from "./Counter";
 
 function App() {
+    const head = <h1 className="site-header">Hello React!</h1>
   return (
-    <Counter/>
+      head
   );
 }
 
