@@ -5,6 +5,6 @@ https://github.com/facebook/create-react-app/blob/master/README.md
 [id]: URL "Optional Title here"
 
 // code
-Link: [Google][googlelink]
+Link: [create-react-app][create-react-app]
 
-[googlelink]: https://google.com "Go google"
+[create-react-app]: https://github.com/facebook/create-react-app/blob/master/README.md "Go create-react-app"
