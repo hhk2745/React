@@ -23,7 +23,17 @@ class FIlterableProductTable extends React.Component {
     }
 
     onTextChange = (t) => {
-        this.setState({searchText:t})
+        this.setState({searchText:t});
+
+        let regex = new RegExp(t);
+
+        // console.log(regex);
+        dummyData.map((v, i)=>{
+            // console.log(regex, v.name, regex.test(v.name));
+            if(regex.test(v.name)){
+                console.log(t);
+            }
+        })
     }
     onCheckChange = (b) => {
         this.setState({searchChkStock:b})
