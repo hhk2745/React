@@ -1,6 +1,6 @@
 import React from 'react'
 
-let todoId = 0 // todo 아이템의 id를 증가시키며 저장하는 변수
+let todoId = 0 // 아이템의 id를 증가시키며 저장하는 변수
 
 class App extends React.Component{
     constructor(props){
