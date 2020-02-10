@@ -16,7 +16,6 @@ class TOC extends React.Component{
                         href={`/contents/${data[i].id}`}
                         onClick={function(id, e){
                             e.preventDefault();
-                            console.log('');
                             onChangePage(id);
                         }.bind(this, data[i].id)}
                         // bind(this, data[i].id) 매개변수로 값을 전달하면 function(id, e)로 받을 수 있고 이벤트(e)는 1자리씩 밀려남
