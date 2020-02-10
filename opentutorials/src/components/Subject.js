@@ -4,11 +4,17 @@ class Subject extends React.Component{
     // class 안에서 선언된 function은 'function'을 안붙임
 
     render(){
-        const {title, sub} = this.props;
+        const {title, sub, onChangePage} = this.props;
+
         return(
             <header>
                 <h1>
-                    <a href={"/"}>{ title }</a>
+                    <a href={"/"} onClick={(e)=>{
+                        e.preventDefault();
+                        onChangePage();
+                    }}>
+                        { title }
+                    </a>
                 </h1>
                 { sub }
             </header>
