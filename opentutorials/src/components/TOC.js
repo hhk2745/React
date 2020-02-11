@@ -5,11 +5,25 @@ class TOC extends React.Component{
 
 
     render(){
-        const data = this.props.data;
+        const {data, onChangePage} = this.props;
+
         let lists = [];
         let i=0;
         while(i < data.length){
-            lists.push(<li key={data[i].id}><a href={data[i].id}>{data[i].title}</a></li>)
+            lists.push(
+                <li key={data[i].id}>
+                    <a
+                        href={`/contents/${data[i].id}`}
+                        onClick={function(id, e){
+                            e.preventDefault();
+                            onChangePage(id);
+                        }.bind(this, data[i].id)}
+                        // bind(this, data[i].id) 매개변수로 값을 전달하면 function(id, e)로 받을 수 있고 이벤트(e)는 1자리씩 밀려남
+                    >
+                        {data[i].title}
+                    </a>
+                </li>
+            )
             i++;
         }
 
