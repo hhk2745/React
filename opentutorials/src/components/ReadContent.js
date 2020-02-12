@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Content extends React.Component{
+class ReadContent extends React.Component{
     // class 안에서 선언된 function은 'function'을 안붙임
     render(){
         const {title, desc} = this.props;
@@ -13,4 +13,4 @@ class Content extends React.Component{
         )
     }
 }
-export default Content;
+export default ReadContent;
