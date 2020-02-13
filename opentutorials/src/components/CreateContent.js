@@ -1,6 +1,6 @@
 import React from 'react';
 
-class ReadContent extends React.Component{
+class CreateContent extends React.Component{
     render(){
         const {onSubmit} = this.props;
         return(
@@ -30,4 +30,4 @@ class ReadContent extends React.Component{
         )
     }
 }
-export default ReadContent;
+export default CreateContent;
