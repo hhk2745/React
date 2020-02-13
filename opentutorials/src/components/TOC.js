@@ -3,8 +3,18 @@ import React from 'react';
 class TOC extends React.Component{
     // class 안에서 선언된 function은 'function'을 안붙임
 
+    shouldComponentUpdate(nextProps, nextState){
+        console.log('>>>>TOC render shouldComponentUpdate', nextProps.data, this.props.data)
+        // return false;
+
+        if(nextProps.data === this.props.data){
+            return false;
+        }
+        return true;
+    }
 
     render(){
+        console.log('>>>>TOC render')
         const {data, onChangePage} = this.props;
 
         let lists = [];
