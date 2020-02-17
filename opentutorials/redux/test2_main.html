@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.1/redux.js"></script>
+</head>
+<body>
+<div id="subject"></div>
+<div id="toc"></div>
+<div id="control"></div>
+<div id="content"></div>
+<script>
+    function subject(){
+        document.querySelector('#subject').innerHTML = `
+            <header>
+                <h1>WEB</h1>
+                Hello, WEB!
+            </header>
+        `
+    }
+    function TOC() {
+
+
+        document.querySelector('#toc').innerHTML = `
+            <nav>
+                <ol>
+                    <li><a href="/1.html" onclick="
+                        event.preventDefault();
+                        const action = {type:'SELECT', selected_id:1}
+                        store.dispatch(action);
+                    ">HTML</a></li>
+                    <li><a href="/2.html" onclick="
+                        event.preventDefault();
+                        const action = {type:'SELECT', selected_id:2}
+                        store.dispatch(action);
+                    ">CSS</a></li>
+                    <li><a href="/3.html" onclick="
+                        event.preventDefault();
+                        const action = {type:'SELECT', selected_id:3}
+                        store.dispatch(action);
+                    ">Javascript</a></li>
+                </ol>
+            </nav>
+        `;
+    }
+    function control(){
+        document.querySelector('#control').innerHTML = `
+            <ul>
+                <li><a onclick="" href="/create">create</a></li>
+                <li><input type="button" value="delete"></li>
+            </ul>
+        `;
+    }
+    function article(){
+        let state = store.getState();
+        if(state.mode === 'welcome'){
+            document.querySelector('#content').innerHTML = `
+                <article>
+                    <h2>Welcome</h2>
+                    Hello World!
+                </article>
+            `;
+        }else if(state.mode === 'read'){
+
+            let tmp = state.contents.filter((id)=>id === state.selected_id);
+            console.log(tmp)
+
+
+            document.querySelector('#content').innerHTML = `
+                <article>
+                    <h2>${tmp.title}</h2>
+                    ${tmp.desc}
+                </article>
+            `;
+        }
+
+
+    }
+
+    function reducer(state, action) {
+        let newState;
+        switch (action.type) {
+            case 'SELECT':{
+                newState = Object.assign({}, state, {selcted_id:action.id});
+                return newState;
+            }
+            case 'B':{
+                newState = Object.assign({}, state);
+                return newState;
+            }
+            default:{
+                const defaultObj = {
+                    mode:'welcome',
+                    selected_id: 1,
+                    max_id: 3,
+                    contents:[
+                        {id:1, title:'HTML', desc:'HTML is ... '},
+                        {id:2, title:'CSS', desc:'CSS is ... '},
+                        {id:3, title:'Javascript', desc:'Javascript is ... '},
+                    ]
+                }
+                newState = Object.assign(defaultObj, state);
+                return newState;
+            }
+        }
+    }
+
+    let store = Redux.createStore(reducer);
+
+    store.subscribe(article);
+    store.subscribe(TOC);
+    console.log(store.getState());
+    subject();
+    TOC();
+    control();
+    article();
+</script>
+
+</body>
+</html>
+
+
+
+
+
