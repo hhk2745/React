@@ -1,0 +1,4 @@
+{
+	"payload": "[{\"type\":\"CHANGE_COLOR\",\"color\":\"red\"},{\"type\":\"CHANGE_COLOR\",\"color\":\"yellow\"},{\"type\":\"CHANGE_COLOR\",\"color\":\"red\"}]",
+	"preloadedState": "{\"color\":\"yellow\"}"
+}
