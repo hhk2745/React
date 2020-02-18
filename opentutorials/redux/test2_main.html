@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.0.1/redux.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 </head>
 <body>
 <div id="subject"></div>
@@ -18,26 +19,27 @@
         `
     }
     function TOC() {
-
-
+        let lis = '';
+        const state = store.getState();
+        let i = 0;
+        while(i < state.max_id){
+            let idVal = i+1;
+            lis += `<li>
+                        <a href="/${idVal}.html" onclick="
+                            event.preventDefault();
+                            const action = {type:'SELECT', selected_id : ${idVal}}
+                            store.dispatch(action);
+                        ">
+                            ${state.contents[i].title}
+                        </a>
+                    </li>
+            `;
+            i++;
+        }
         document.querySelector('#toc').innerHTML = `
             <nav>
                 <ol>
-                    <li><a href="/1.html" onclick="
-                        event.preventDefault();
-                        const action = {type:'SELECT', selected_id:1}
-                        store.dispatch(action);
-                    ">HTML</a></li>
-                    <li><a href="/2.html" onclick="
-                        event.preventDefault();
-                        const action = {type:'SELECT', selected_id:2}
-                        store.dispatch(action);
-                    ">CSS</a></li>
-                    <li><a href="/3.html" onclick="
-                        event.preventDefault();
-                        const action = {type:'SELECT', selected_id:3}
-                        store.dispatch(action);
-                    ">Javascript</a></li>
+                    ${lis}
                 </ol>
             </nav>
         `;
@@ -45,8 +47,27 @@
     function control(){
         document.querySelector('#control').innerHTML = `
             <ul>
-                <li><a onclick="" href="/create">create</a></li>
-                <li><input type="button" value="delete"></li>
+                <li>
+                    <a href="/create" onclick="
+                        event.preventDefault();
+                        const action = {type:'CREATE_FROM'}
+                        store.dispatch(action);
+                    ">
+                        create
+                    </a>
+                </li>
+                <li>
+                    <input type="button" value="delete" onclick="
+                        event.preventDefault();
+                        const state = store.getState();
+                        const action = {type:'DELETE', targetId:state.selected_id}
+                        if(state.mode === 'read'){
+                            store.dispatch(action);
+                        }else{
+                            alert('읽기 모드일때만 삭제 가능합니다')
+                        }
+                    ">
+                </li>
             </ul>
         `;
     }
@@ -60,10 +81,11 @@
                 </article>
             `;
         }else if(state.mode === 'read'){
-
-            let tmp = state.contents.filter((id)=>id === state.selected_id);
-            console.log(tmp)
-
+            console.log('read state.contents >>',state.contents);
+            let tmp = state.contents.find((now)=>
+                now.id === state.selected_id
+            );
+            console.log('read >>', tmp)
 
             document.querySelector('#content').innerHTML = `
                 <article>
@@ -71,20 +93,68 @@
                     ${tmp.desc}
                 </article>
             `;
+        }else if(state.mode === 'create'){
+            document.querySelector('#content').innerHTML = `
+            <article>
+                <form onsubmit="
+                    event.preventDefault();
+                    const state = store.getState();
+                    console.log(this.title.value, this.desc.value);
+
+                    const action = {
+                        type:'CREATE',
+                        title:this.title.value,
+                        desc:this.desc.value,
+                        max_id:state.max_id+1
+                    };
+                    store.dispatch(action);
+                ">
+                    <p>
+                        <input type="text" name="title" placeholder="title">
+                    </p>
+                    <p>
+                        <textarea name="desc" placeholder="description"></textarea>
+                    </p>
+                    <p>
+                        <input type="submit">
+                    </p>
+                </form>
+            </article>
+            `
         }
-
-
     }
 
     function reducer(state, action) {
         let newState;
         switch (action.type) {
             case 'SELECT':{
-                newState = Object.assign({}, state, {selcted_id:action.id});
+                newState = Object.assign({}, state, {selected_id:action.selected_id, mode:'read'});
                 return newState;
             }
-            case 'B':{
-                newState = Object.assign({}, state);
+            case 'CREATE_FROM':{
+                newState = Object.assign({}, state, {mode:'create'});
+                return newState;
+            }
+            case 'CREATE':{
+                newState = Object.assign({}, state, {mode:'read', selected_id:action.max_id, max_id:action.max_id});
+                newState.contents.push({id:action.max_id, title:action.title, desc:action.desc});
+
+                return newState;
+            }
+            case 'DELETE':{
+                newState = Object.assign({}, state, {mode:'welcome', max_id:state.max_id - 1});
+                // newState.contents = newState.contents.filter((content)=> content.id !== action.targetId);
+
+                let i = 0;
+                let newContents = [];
+                while(i < newState.contents.length){
+                    if(newState.contents[i].id !== action.targetId){
+                        newContents.push({id:i+1, title:newState.contents[i].title, desc: newState.contents[i].desc});
+                    }
+                    i++;
+                }
+                newState.contents = newContents;
+                console.log('DELETE after >>', newState)
                 return newState;
             }
             default:{
@@ -104,7 +174,8 @@
         }
     }
 
-    let store = Redux.createStore(reducer);
+    let store = Redux.createStore(reducer,
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
     store.subscribe(article);
     store.subscribe(TOC);
